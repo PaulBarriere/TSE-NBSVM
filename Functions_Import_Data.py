@@ -1,6 +1,3 @@
-
-exec(open(Init.py).read())
-
 '''
 
 These are all the functions use to import and prepare the data
