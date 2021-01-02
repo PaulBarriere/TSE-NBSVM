@@ -31,7 +31,7 @@ def assign_title (df_reviews, df_titles, index_title, start_index):
     return(df, i)
     
     
- def crea_df (df_reviews, df_titles):
+def crea_df (df_reviews, df_titles):
     df_end = pd.DataFrame()
     start = 0
     for j in range(df_titles.shape[0]-1):
@@ -41,7 +41,7 @@ def assign_title (df_reviews, df_titles, index_title, start_index):
     return df_end
     
     
- def plus(df, column, i):
+def plus(df, column, i):
     l = 0
     text = df.loc[i, column].split('[')
     for i in range(len(text)):
