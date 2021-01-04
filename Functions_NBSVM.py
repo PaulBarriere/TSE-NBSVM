@@ -273,7 +273,7 @@ Function NBSVM_fit_model uses:
 def NB_SVM_fit_model(Train_x_sample, Train_y_sample, 
                   ngrams, NB=True, alpha = 10):
   
-  V, F, vectorization = vectorize(Train_x_sample = train_x, ngrams=(1,2))
+  V, F, vectorization = vectorize(Train_x_sample = Train_x_sample, ngrams=(1,2))
   # Since binarized = True always here.
   F = np.where(F > 0,1,0)
 
