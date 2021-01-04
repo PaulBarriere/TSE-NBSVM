@@ -76,7 +76,7 @@ def positive_or_negative_review (df):
 
 
 def import_data(nom_fichier):
-    df = pd.read_csv(path + 'Data/' + nom_fichier, sep = '\\') 
+    df = pd.read_csv('TSE-NBSVM/Data/' + nom_fichier, sep = '\\') 
     df.columns = ['reviews']
     df= df.drop([i for i in range(first_line(df))], axis = 0)
     df = df.reset_index()
