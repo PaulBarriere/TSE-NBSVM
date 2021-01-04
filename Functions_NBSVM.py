@@ -1,3 +1,5 @@
+exec(open('TSE-NBSVM/Init.py').read())
+
 ''' Function vectorize returns:
         - the Vector V defined as the feature vector (ie a vector containing 
         strings which are the list of vocabulary)
