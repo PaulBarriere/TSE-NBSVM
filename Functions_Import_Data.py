@@ -3,6 +3,7 @@
 These are all the functions use to import and prepare the data
 
 '''
+exec(open('Init.py').read())
 
 def first_line (df):
     l=[]
