@@ -190,3 +190,107 @@ def eval(predictions, y_test):
   print('accuracy {}'.format(accuracy_score(y_test, predictions)))
   print(classification_report(y_test, predictions))
   return 
+
+''' Function cross_validation_NBSVM returns:
+        - an integer which is the average of the accuracy_score of all step of
+         cross validation.
+
+Function eval uses:
+        - sample_x: a list of reviews. 
+
+        - sample_y: a list of integers equals to 1 or -1. 
+
+        - cv: an integer which is the number of division of our sample we do
+
+        - alpha: a real number which is the parameter of the NBSVM model.
+
+
+'''
+
+def cross_validation_NBSVM(sample_x, sample_y, cv, alpha):
+
+  # First we shuffle 
+  sample = list(zip(sample_x, sample_y))
+  random.shuffle(sample)
+  new_sample_x, new_sample_y = zip(*sample)
+
+  # Then we divide the sample into cv time and define test and train set:
+
+  lenght = round(len(new_sample_x)/cv)
+  accuracy = [] # list to stock the accuraccy
+  for i in range(cv):
+    if i == cv-1:
+      test_x = new_sample_x[lenght*i:]
+      test_y = new_sample_y[lenght*i:]
+      train_x = new_sample_x[:lenght*i]
+      train_y = new_sample_y[:lenght*i]
+    else:
+      test_x = new_sample_x[lenght*i:lenght*(i+1)]
+      test_y = new_sample_y[lenght*i:lenght*(i+1)]
+      train_x = new_sample_x[:lenght*i] + new_sample_x[lenght*(i+1):]
+      train_y = new_sample_y[:lenght*i] + new_sample_y[lenght*(i+1):]
+    
+    # we compute the models parameters
+    W, B, binarized, vectorization = MNB_fit_model(Train_x_sample = train_x, 
+                                                  Train_y_sample = train_y,
+                                                  ngrams = (1,2), 
+                                                  alpha = alpha, 
+                                                  binarized=False)
+    
+    # We compute the predictions
+    y_pred = predict(binarized,W,B,vectorization,test_x)
+
+    # We then stock the accuracy
+    accuracy.append(accuracy_score(test_y, y_pred, sample_weight=None))
+
+    return np.mean(accuracy)
+
+
+
+''' --------------------------------------------------------------------------
+SVM and NBSVM
+
+Function NBSVM_fit_model returns:
+        - a model (sklearn)
+
+Function NBSVM_fit_model uses:
+        - Train_x_sample: a list of strings (list of reviews)
+
+        - Train_y_sample which is the value of a review (positive / negative) of
+        the training dataset. 
+
+        - ngrams : a tupple of two integer. 
+
+        - alpha : smoothing parameter
+
+        - NB : a boolean argument meaning that the model is NBSVM if True and 
+        just SVM if False. 
+
+'''
+
+def NB_SVM_fit_model(Train_x_sample, Train_y_sample, 
+                  ngrams, NB=True, alpha = 10):
+  
+  V, F, vectorization = vectorize(Train_x_sample = train_x, ngrams=(1,2))
+  # Since binarized = True always here.
+  F = np.where(F > 0,1,0)
+
+  # Fit the model
+  if NB == False:
+    clf = svm.LinearSVC()
+    clf.fit(F.T, train_y)
+  else:
+    R = get_R(alpha=alpha, Train_y_sample = Train_y_sample, F = F)
+    # We define first a matrix r with the same number of columns as F and with each 
+    # column equal to R.
+    r = np.array([list(R),]*len(F[0]))
+    r = r.transpose()
+
+    # We do the elementwise produt of R and F.
+    product = np.multiply(r,F)
+
+    # We define and fit the model:
+    clf = svm.LinearSVC()
+    clf.fit(product.T, train_y)
+
+  return clf
