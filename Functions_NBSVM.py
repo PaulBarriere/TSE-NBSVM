@@ -280,7 +280,7 @@ def NB_SVM_fit_model(Train_x_sample, Train_y_sample,
   # Fit the model
   if NB == False:
     clf = svm.LinearSVC()
-    clf.fit(F.T, train_y)
+    clf.fit(F.T, Train_y_sample)
   else:
     R = get_R(alpha=alpha, Train_y_sample = Train_y_sample, F = F)
     # We define first a matrix r with the same number of columns as F and with each 
@@ -293,6 +293,6 @@ def NB_SVM_fit_model(Train_x_sample, Train_y_sample,
 
     # We define and fit the model:
     clf = svm.LinearSVC()
-    clf.fit(product.T, train_y)
+    clf.fit(product.T, Train_y_sample)
 
   return clf
